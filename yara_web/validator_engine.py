@@ -4,10 +4,8 @@ import subprocess
 import tempfile
 import plyara
 
-YARAC_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    "yara-bin", "yarac64.exe"
-)
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+YARAC_PATH = os.path.join(PROJECT_DIR, "yara-bin", "yarac64.exe")
 
 YARA_LINE_RE = re.compile(
     r'(?:error|warning):\s+'
@@ -15,16 +13,40 @@ YARA_LINE_RE = re.compile(
     r'[^(]+\((\d+)\):\s*(.+)'
 )
 
+try:
+    import yara as _yara
+    HAS_YARA_PYTHON = True
+except ImportError:
+    HAS_YARA_PYTHON = False
 
-def validate(rule_text):
-    """
-    Validate a YARA rule using the official YARA compiler (yarac64.exe).
-    Returns (is_valid, errors, rule_name).
-    errors is a list of {'line': int, 'message': str, 'type': 'error'|'warning'}.
-    """
-    if not rule_text.strip():
-        return False, [{'line': 1, 'message': 'No YARA rule provided', 'type': 'error'}], None
 
+def _validate_via_yara_python(rule_text):
+    errors = []
+    name = None
+
+    m = re.search(r'rule\s+(\w+)\s*\{', rule_text)
+    if m:
+        name = m.group(1)
+
+    try:
+        _yara.compile(source=rule_text)
+        return True, errors, name
+    except _yara.SyntaxError as e:
+        msg = str(e)
+        line_no = 1
+        for line in msg.splitlines():
+            m2 = re.match(r'.*\((\d+)\):\s*(.*)', line)
+            if m2:
+                line_no = int(m2.group(1))
+                msg = m2.group(2).strip()
+                break
+        errors.append({'line': line_no, 'message': msg, 'type': 'error'})
+        return False, errors, name
+    except Exception as e:
+        return False, [{'line': 1, 'message': str(e), 'type': 'error'}], name
+
+
+def _validate_via_yarac(rule_text):
     fd, tmp_path = tempfile.mkstemp(suffix='.yara', prefix='yara_val_', text=True)
     try:
         with os.fdopen(fd, 'w', encoding='utf-8') as f:
@@ -79,9 +101,20 @@ def validate(rule_text):
             pass
 
 
+def validate(rule_text):
+    if not rule_text.strip():
+        return False, [{'line': 1, 'message': 'No YARA rule provided', 'type': 'error'}], None
+
+    if HAS_YARA_PYTHON:
+        return _validate_via_yara_python(rule_text)
+
+    if os.path.exists(YARAC_PATH):
+        return _validate_via_yarac(rule_text)
+
+    return False, [{'line': 1, 'message': 'No YARA validator available (install yara-python or place yarac64.exe in yara-bin/)', 'type': 'error'}], None
+
+
 def parse_rule(rule_text):
-    """Parse a YARA rule with plyara and return (parsed_rule, error).
-    Returns (parsed_rule_dict, None) on success, (None, error_string) on failure."""
     try:
         parser = plyara.Plyara()
         parsed = parser.parse_string(rule_text)

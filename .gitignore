@@ -27,5 +27,14 @@ Thumbs.db
 .env
 *.env.local
 
-# Yara binary (keep if versioned, but no need)
+# Yara binary
 yara-bin/
+
+# Archives
+*.7z
+*.zip
+*.tar.gz
+
+# Logs
+*.log
+*.err
