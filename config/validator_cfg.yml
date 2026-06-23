@@ -1,0 +1,8 @@
+string_encoding:
+  value: utf-8
+
+white_space_replacement:
+  value:
+    char_to_replace: '\t'
+    char_replacement: ' '
+    count_of_replaced: 1

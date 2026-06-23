@@ -1,0 +1,18 @@
+# Netlify configuration for YARA Validator
+# 
+# Note: Streamlit apps require a Python server and cannot run directly on
+# Netlify's static hosting. For production hosting, use:
+#   - Streamlit Community Cloud (free, recommended): https://share.streamlit.io
+#   - Render.com
+#   - Hugging Face Spaces
+#
+# This config is provided for reference/static hosting of docs.
+
+[build]
+  command = "echo 'Use Streamlit Community Cloud for deployment'"
+  publish = "."
+
+[[redirects]]
+  from = "/"
+  to = "https://share.streamlit.io"
+  status = 302

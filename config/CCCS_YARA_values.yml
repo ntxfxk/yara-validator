@@ -1,0 +1,64 @@
+---
+description: "Validator Configuration File"
+version: 0.9
+rule_statuses:
+   - value: 'TESTING'
+   - value: 'RELEASED'
+   - value: 'DEPRECATED'
+sharing_classifications:
+   - value: 'TLP:CLEAR|TLP:CLEAR//COMMERCIAL|TLP:WHITE|TLP:WHITE//COMMERCIAL'
+   - value: 'TLP:GREEN|TLP:GREEN//COMMERCIAL'
+   - value: 'TLP:AMBER|TLP:AMBER//COMMERCIAL'
+   - value: 'TLP:AMBER\+STRICT|TLP:AMBER\+STRICT//COMMERCIAL'
+category_types:
+   - value: 'INFO'
+   - value: 'EXPLOIT'
+   - value: 'TECHNIQUE'
+   - value: 'TOOL'
+   - value: 'MALWARE'
+malware_types:
+   - value: "ADWARE"
+   - value: "APT"
+   - value: "BACKDOOR"
+   - value: "BANKER"
+   - value: "BOOTKIT"
+   - value: "BOT"
+   - value: "BROWSER-HIJACKER"
+   - value: "BRUTEFORCER"
+   - value: "CLICKFRAUD"
+   - value: "CRYPTOMINER"
+   - value: "DDOS"
+   - value: "DOWNLOADER"
+   - value: "DROPPER"
+   - value: "EXPLOITKIT"
+   - value: "FAKEAV"
+   - value: "HACKTOOL"
+   - value: "INFOSTEALER"
+   - value: "KEYLOGGER"
+   - value: "LOADER"
+   - value: "OBFUSCATOR"
+   - value: "POS"
+   - value: "PROXY"
+   - value: "RAT"
+   - value: "RANSOMWARE"
+   - value: "ROOTKIT"
+   - value: "SCANNER"
+   - value: "SCAREWARE"
+   - value: "SPAMMER"
+   - value: "TROJAN"
+   - value: "VIRUS"
+   - value: "WIPER"
+   - value: "WEBSHELL"
+   - value: "WORM"
+actor_types:
+   - value: "APT"
+   - value: "CRIMEWARE"
+   - value: "FIN"
+hash_types:
+   - value: "[a-fA-F0-9]{32}"
+   - value: "[a-fA-F0-9]{40}"
+   - value: "[a-fA-F0-9]{64}"
+unvalidated_regex:
+   - value: ".*"
+universal_regex:
+   - value: '[^a-z]*'

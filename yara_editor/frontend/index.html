@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; min-height: 480px; background: #272822; }
+#editor { width: 100%; height: 100%; min-height: 480px; font-size: 13px; }
+#error { display: none; padding: 20px; color: #ff6b6b; font-family: monospace; }
+</style>
+</head>
+<body>
+<div id="editor"></div>
+<div id="error"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.36.2/ace.js"></script>
+<script>
+(function(){
+  var Streamlit = {
+    setComponentValue: function(value) {
+      window.parent.postMessage({
+        isStreamlitMessage: true,
+        type: 'streamlit:setComponentValue',
+        value: value,
+        dataType: 'json'
+      }, '*');
+    },
+    setComponentReady: function() {
+      window.parent.postMessage({
+        isStreamlitMessage: true,
+        type: 'streamlit:componentReady',
+        apiVersion: 1
+      }, '*');
+    },
+    setFrameHeight: function(h) {
+      h = h || document.documentElement.scrollHeight;
+      window.parent.postMessage({
+        isStreamlitMessage: true,
+        type: 'streamlit:setFrameHeight',
+        height: h
+      }, '*');
+    }
+  };
+
+  function showError(msg) {
+    var el = document.getElementById('error');
+    el.textContent = 'Error: ' + msg;
+    el.style.display = 'block';
+    document.getElementById('editor').style.display = 'none';
+  }
+
+  if (typeof ace === 'undefined' || !ace.edit) {
+    showError('Ace editor failed to load from CDN');
+    return;
+  }
+
+  ace.define('ace/mode/yara_highlight_rules',
+    ['require','exports','module','ace/lib/oop','ace/mode/text_highlight_rules'],
+    function(require, exports, module) {
+      var oop = require('../lib/oop');
+      var TextHighlightRules = require('./text_highlight_rules').TextHighlightRules;
+
+      var YaraHighlightRules = function() {
+        var keywords = 'rule|meta|strings|condition|all|any|them|in|of|and|or|not|for|at|with|true|false|contains|matches|icontains|imatches|startswith|endswith|iequals|defined';
+        var types = 'entrypoint|uint8|uint16|uint32|int8|int16|int32|uint8be|uint16be|uint32be|int8be|int16be|int32be';
+        var modifiers = 'nocase|wide|ascii|fullword|xor|base64|base64wide|private|global';
+
+        this.$rules = {
+          start: [
+            { token: 'comment', regex: /\/\//, next: 'line_comment' },
+            { token: 'comment', regex: /\/\*/, next: 'block_comment' },
+            { token: 'constant.language', regex: /\{/, next: 'hex' },
+            { token: 'string.regexp', regex: /\//, next: 'regex' },
+            { token: 'string', regex: /"/, next: 'string' },
+            { token: 'keyword.control', regex: '\\b(import|include)\\b' },
+            { token: 'keyword', regex: '\\b(' + keywords + ')\\b' },
+            { token: 'storage.type', regex: '\\b(' + types + ')\\b' },
+            { token: 'keyword.other', regex: '\\b(' + modifiers + ')\\b' },
+            { token: 'variable', regex: /\\\$[a-zA-Z_*][a-zA-Z0-9_*]*/ },
+            { token: 'constant.numeric', regex: /\b0x[0-9a-fA-F]+\b/ },
+            { token: 'constant.numeric', regex: /\b[0-9]+\b/ },
+            { token: 'keyword.operator', regex: /==|!=|<=|>=|<|>|:=/ },
+            { token: 'punctuation', regex: /[()\[\]{}.,;:]/ },
+            { token: 'text', regex: /\s+/ }
+          ],
+          line_comment: [
+            { token: 'comment', regex: /$/, next: 'start' },
+            { token: 'comment', regex: /./ }
+          ],
+          block_comment: [
+            { token: 'comment', regex: /\*\//, next: 'start' },
+            { token: 'comment', regex: /./ }
+          ],
+          string: [
+            { token: 'string', regex: /"/, next: 'start' },
+            { token: 'string', regex: /\\"/ },
+            { token: 'string', regex: /./ }
+          ],
+          hex: [
+            { token: 'constant.language', regex: /\}/, next: 'start' },
+            { token: 'constant.numeric', regex: /\b[0-9a-fA-F]{2}\b/ },
+            { token: 'constant.numeric', regex: /\?\?/ },
+            { token: 'keyword', regex: /\[-?\d+(?:-?\d+)?\]/ },
+            { token: 'text', regex: /\s+/ },
+            { token: 'comment', regex: /\/\//, next: 'hex_comment' },
+            { token: 'comment', regex: /\/\*/, next: 'hex_block_comment' },
+            { token: 'identifier', regex: /[()|]/ }
+          ],
+          hex_comment: [
+            { token: 'comment', regex: /$/, next: 'hex' },
+            { token: 'comment', regex: /./ }
+          ],
+          hex_block_comment: [
+            { token: 'comment', regex: /\*\//, next: 'hex' },
+            { token: 'comment', regex: /./ }
+          ],
+          regex: [
+            { token: 'string.regexp', regex: /\\\// },
+            { token: 'string.regexp', regex: /\//i, next: 'start' },
+            { token: 'string.regexp', regex: /./ }
+          ]
+        };
+        this.normalizeRules();
+      };
+
+      oop.inherits(YaraHighlightRules, TextHighlightRules);
+      exports.YaraHighlightRules = YaraHighlightRules;
+    }
+  );
+
+  ace.define('ace/mode/yara',
+    ['require','exports','module','ace/lib/oop','ace/mode/text','ace/mode/yara_highlight_rules'],
+    function(require, exports, module) {
+      var oop = require('../lib/oop');
+      var TextMode = require('./text').Mode;
+      var YaraHighlightRules = require('./yara_highlight_rules').YaraHighlightRules;
+
+      var Mode = function() {
+        this.HighlightRules = YaraHighlightRules;
+        this.$behaviour = this.$defaultBehaviour;
+      };
+      oop.inherits(Mode, TextMode);
+      Mode.prototype.lineCommentStart = '//';
+      Mode.prototype.$id = 'ace/mode/yara';
+      exports.Mode = Mode;
+    }
+  );
+
+  var currentCode = '';
+  var lastSentValue = null;
+  var editor;
+
+  try {
+    editor = ace.edit('editor');
+    editor.session.setMode('ace/mode/yara');
+    editor.setTheme('ace/theme/monokai');
+    editor.setShowPrintMargin(false);
+    editor.setOption('wrap', true);
+    editor.setOption('indentedSoftWrap', false);
+    editor.setOption('fontSize', 13);
+    editor.setReadOnly(false);
+    editor.renderer.setScrollMargin(8, 8, 8, 8);
+    editor.setAutoScrollEditorIntoView(true);
+  } catch(e) {
+    showError('Ace init failed: ' + e.message);
+    return;
+  }
+
+  editor.on('blur', function() {
+    var val = editor.getValue();
+    if (val !== lastSentValue) {
+      lastSentValue = val;
+      Streamlit.setComponentValue({text: val, type: 'blur'});
+    }
+  });
+
+  function handleRender(args) {
+    if (args && args.code !== undefined && args.code !== currentCode) {
+      currentCode = args.code;
+      editor.setValue(args.code, -1);
+    }
+    setTimeout(function() { Streamlit.setFrameHeight(); }, 100);
+  }
+
+  window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'streamlit:render') {
+      handleRender(event.data.args || {});
+    }
+  });
+
+  Streamlit.setComponentReady();
+  setTimeout(function() { Streamlit.setFrameHeight(); }, 200);
+})();
+</script>
+</body>
+</html>
