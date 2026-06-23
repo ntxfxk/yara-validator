@@ -14,7 +14,7 @@ st.set_page_config(page_title="YARA Validator", page_icon="\u25bd", layout="wide
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 * { font-family: 'Inter', -apple-system, sans-serif; }
 
@@ -22,12 +22,7 @@ st.markdown("""
 .stApp { margin-top: 0; padding-top: 0; }
 
 body {
-    background: #08080f;
-    background-image:
-        radial-gradient(ellipse 700px 500px at 10% 15%, rgba(14, 165, 233, 0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 500px 500px at 90% 25%, rgba(168, 85, 247, 0.04) 0%, transparent 60%),
-        radial-gradient(ellipse 400px 300px at 50% 85%, rgba(244, 114, 182, 0.03) 0%, transparent 60%);
-    background-attachment: fixed;
+    background: #1e1e1e;
 }
 
 .block-container {
@@ -37,74 +32,35 @@ body {
     .block-container { padding: 0.5rem 0.5rem 1rem; }
 }
 
-/* ─── Animated background orbs ─── */
-body::before, body::after {
-    content: ''; position: fixed; border-radius: 50%;
-    pointer-events: none; z-index: 0;
+/* ─── VSCode-style title bar ─── */
+.title-bar {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.5rem 0 1rem 0;
+    margin-bottom: 0.25rem;
+    border-bottom: 1px solid #2d2d2d;
 }
-body::before {
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(14, 165, 233, 0.05), transparent 70%);
-    top: -200px; left: -150px;
-    animation: orbFloat 14s ease-in-out infinite;
-}
-body::after {
-    width: 450px; height: 450px;
-    background: radial-gradient(circle, rgba(168, 85, 247, 0.04), transparent 70%);
-    bottom: -100px; right: -100px;
-    animation: orbFloat 18s ease-in-out infinite reverse;
-}
-@keyframes orbFloat {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(40px, -30px) scale(1.06); }
-    66% { transform: translate(-25px, 20px) scale(0.94); }
-}
-
-/* ─── Header ─── */
-.app-header {
-    display: flex; align-items: center; gap: 1rem;
-    margin-bottom: 1.5rem;
-    position: relative; z-index: 1;
-}
-.app-logo {
-    width: 44px; height: 44px; border-radius: 14px;
-    background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+.title-icon {
+    width: 20px; height: 20px; border-radius: 4px;
+    background: #007acc;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem; font-weight: 900; color: #fff;
-    box-shadow: 0 4px 24px rgba(14, 165, 233, 0.35);
-    position: relative; overflow: hidden;
+    flex-shrink: 0;
 }
-.app-logo::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent 50%);
-}
-.app-title-group { display: flex; flex-direction: column; gap: 0.1rem; }
-.app-title {
-    font-size: 1.4rem; font-weight: 900;
-    background: linear-gradient(135deg, #e0f2fe 0%, #7dd3fc 30%, #a78bfa 65%, #f9a8d4 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    letter-spacing: -0.03em;
-}
-.app-sub {
-    font-size: 0.7rem; color: rgba(148, 163, 184, 0.8);
-    font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+.title-icon svg { width: 14px; height: 14px; fill: #fff; }
+.title-text {
+    font-size: 0.82rem; font-weight: 500; color: #cccccc;
+    letter-spacing: 0.01em;
 }
 
-/* ─── Editor glass card ─── */
+/* ─── Editor card ─── */
 .editor-card {
-    background: rgba(12, 12, 22, 0.75);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 14px;
-    padding: 0.5rem;
-    box-shadow: 0 8px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+    background: #1e1e1e;
+    border: 1px solid #2d2d2d;
+    border-radius: 0;
+    padding: 0;
     position: relative; z-index: 1;
-    transition: border-color 0.4s, box-shadow 0.4s;
 }
 .editor-card:focus-within {
-    border-color: rgba(14, 165, 233, 0.25);
-    box-shadow: 0 8px 48px rgba(0,0,0,0.5), 0 0 40px rgba(14, 165, 233, 0.06);
+    border-color: #007acc;
 }
 
 /* ─── Validate button ─── */
@@ -114,157 +70,111 @@ div[data-testid="stVerticalBlock"] > div:has(button[data-testid="baseButton-prim
     margin-top: 1rem;
 }
 button[data-testid="baseButton-primary"] {
-    background: linear-gradient(135deg, #0ea5e9, #6366f1, #8b5cf6) !important;
-    background-size: 200% 200% !important;
+    background: #0e639c !important;
     color: #fff !important; border: none !important;
-    border-radius: 12px !important;
-    font-size: 1rem !important; font-weight: 700 !important;
-    padding: 0.85rem 0 !important; width: 100% !important;
+    border-radius: 0 !important;
+    font-size: 0.82rem !important; font-weight: 500 !important;
+    padding: 0.6rem 0 !important; width: 100% !important;
     cursor: pointer !important;
-    position: relative !important;
-    overflow: hidden !important;
-    letter-spacing: 0.01em !important;
-    transition: transform 0.25s, box-shadow 0.35s !important;
-    box-shadow: 0 4px 28px rgba(14, 165, 233, 0.3) !important;
-    animation: btnGlow 3s ease-in-out infinite !important;
-}
-@keyframes btnGlow {
-    0%, 100% { box-shadow: 0 4px 28px rgba(14, 165, 233, 0.3); }
-    50% { box-shadow: 0 4px 40px rgba(14, 165, 233, 0.5), 0 0 60px rgba(99, 102, 241, 0.15); }
+    letter-spacing: 0.02em !important;
+    transition: background 0.15s !important;
 }
 button[data-testid="baseButton-primary"]:hover {
-    transform: translateY(-2px) scale(1.01) !important;
-    box-shadow: 0 8px 40px rgba(14, 165, 233, 0.45), 0 0 80px rgba(99, 102, 241, 0.15) !important;
-    animation: none !important;
-    background-position: 100% 100% !important;
+    background: #1177bb !important;
 }
 button[data-testid="baseButton-primary"]:active {
-    transform: translateY(0) scale(0.98) !important;
-}
-button[data-testid="baseButton-primary"]::before {
-    content: ''; position: absolute; inset: -2px;
-    border-radius: 13px;
-    background: linear-gradient(135deg, #0ea5e9, #a78bfa, #f472b6, #0ea5e9);
-    background-size: 300% 300%;
-    z-index: -1;
-    animation: borderSpin 4s linear infinite;
-    opacity: 0;
-    transition: opacity 0.4s;
-}
-button[data-testid="baseButton-primary"]:hover::before { opacity: 1; }
-@keyframes borderSpin {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    background: #0e639c !important;
 }
 button[data-testid="baseButton-primary"] p {
-    font-size: 1rem !important; font-weight: 700 !important;
-    position: relative; z-index: 1;
+    font-size: 0.82rem !important; font-weight: 500 !important;
     color: #fff !important;
 }
 
 /* ─── Section titles ─── */
 .section-title {
-    font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: rgba(148, 163, 184, 0.7);
-    margin: 1.5rem 0 0.8rem 0;
-    display: flex; align-items: center; gap: 0.6rem;
-    position: relative; z-index: 1;
-}
-.section-title::after {
-    content: ''; flex: 1; height: 1px;
-    background: linear-gradient(90deg, rgba(148, 163, 184, 0.08), transparent);
+    font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #858585;
+    padding: 0.6rem 0 0.4rem 0;
+    border-bottom: 1px solid #2d2d2d;
+    margin: 1rem 0 0.6rem 0;
+    display: flex; align-items: center; gap: 0.5rem;
 }
 
 /* ─── Diagnostics ─── */
 .diag {
-    display: flex; gap: 0.7rem; align-items: flex-start;
-    padding: 0.75rem 1rem; margin: 4px 0;
-    border-radius: 10px;
-    font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
-    line-height: 1.55;
-    transition: all 0.2s;
-    animation: diagSlide 0.3s ease-out;
+    display: flex; gap: 0.6rem; align-items: flex-start;
+    padding: 0.35rem 0.75rem; margin: 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+    line-height: 1.5;
     position: relative; z-index: 1;
 }
-@keyframes diagSlide {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.diag:hover { transform: translateX(4px); }
-.diag-icon { flex-shrink: 0; width: 20px; text-align: center; font-size: 0.95rem; }
+.diag-icon { flex-shrink: 0; width: 18px; text-align: center; font-size: 0.8rem; }
 .diag-body { flex: 1; min-width: 0; }
 .diag-loc {
-    color: #64748b; margin-right: 0.5rem;
-    font-size: 0.7rem; font-weight: 600; font-family: 'Inter', sans-serif;
+    color: #858585; margin-right: 0.5rem;
+    font-size: 0.72rem; font-weight: 500; font-family: 'Inter', sans-serif;
 }
-.diag-err  .diag-icon { color: #f87171; }
-.diag-warn .diag-icon { color: #fbbf24; }
+.diag-err  .diag-icon { color: #f48771; }
+.diag-warn .diag-icon { color: #cca700; }
 
 .diag-err {
-    background: rgba(239, 68, 68, 0.07);
-    border-left: 2.5px solid rgba(239, 68, 68, 0.5);
+    background: rgba(244, 135, 113, 0.06);
+    border-left: 3px solid #f48771;
 }
 .diag-warn {
-    background: rgba(245, 158, 11, 0.05);
-    border-left: 2.5px solid rgba(245, 158, 11, 0.45);
+    background: rgba(204, 167, 0, 0.05);
+    border-left: 3px solid #cca700;
 }
 
 .diag-msg {
-    color: #f1f5f9;
+    color: #d4d4d4;
     font-family: 'JetBrains Mono', monospace;
 }
 
 /* ─── Code context ─── */
 .code-ctx {
-    margin: 0.4rem 0 0.4rem 1.8rem;
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255,255,255,0.04);
-    border-radius: 8px;
-    padding: 0.55rem 0.8rem; overflow-x: auto;
-    font-family: 'JetBrains Mono', monospace; font-size: 0.76rem;
-    line-height: 1.65;
+    margin: 0.1rem 0 0.4rem 1.7rem;
+    background: #1e1e1e;
+    border: 1px solid #2d2d2d;
+    border-top: none;
+    padding: 0.4rem 0.7rem; overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+    line-height: 1.6;
     position: relative; z-index: 1;
 }
-.code-ctx .arrow { color: #f87171; font-size: 0.65rem; margin-right: 0.4rem; }
+.code-ctx .arrow { color: #f48771; font-size: 0.6rem; margin-right: 0.3rem; }
 .code-ctx .num {
-    color: rgba(148, 163, 184, 0.35);
+    color: #858585;
     margin-right: 0.6rem;
     font-size: 0.7rem;
-    font-weight: 500;
 }
 
 /* ─── Success banner ─── */
 .success-banner {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(16, 185, 129, 0.02));
-    border: 1px solid rgba(16, 185, 129, 0.15);
-    border-radius: 12px; padding: 1.1rem 1.2rem; margin: 0.5rem 0;
-    display: flex; align-items: center; gap: 0.9rem;
-    animation: diagSlide 0.3s ease-out;
+    background: rgba(78, 201, 176, 0.06);
+    border: 1px solid rgba(78, 201, 176, 0.15);
+    padding: 0.7rem 1rem; margin: 0.5rem 0;
+    display: flex; align-items: center; gap: 0.7rem;
     position: relative; z-index: 1;
 }
 .success-icon {
-    width: 38px; height: 38px; border-radius: 50%;
-    background: rgba(16, 185, 129, 0.15);
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(78, 201, 176, 0.12);
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.15rem; flex-shrink: 0;
-    box-shadow: 0 0 24px rgba(16, 185, 129, 0.15);
+    font-size: 0.9rem; flex-shrink: 0;
 }
 
-/* ─── Custom scrollbar ─── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.15); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.3); }
-
-/* ─── None ─── */
-.none-msg { color: rgba(148, 163, 184, 0.5); font-size: 0.8rem; font-style: italic; padding: 0.3rem 0; }
+::-webkit-scrollbar-thumb { background: #424242; border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: #4f4f4f; }
 
 /* ─── Mobile ─── */
 @media (max-width: 640px) {
     .block-container { padding: 0.8rem 0.5rem; }
-    .diag { font-size: 0.73rem; padding: 0.5rem 0.7rem; }
+    .diag { font-size: 0.72rem; padding: 0.35rem 0.5rem; }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -281,12 +191,11 @@ DEFAULT = """rule SampleRule {
 
 # ── Header ──
 st.markdown("""
-<div class="app-header">
-    <div class="app-logo">Y</div>
-    <div class="app-title-group">
-        <div class="app-title">YARA Validator</div>
-        <div class="app-sub">Syntax Analysis Engine</div>
+<div class="title-bar">
+    <div class="title-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
     </div>
+    <span class="title-text">YARA Validator — Syntax Analysis Engine</span>
 </div>
 """, unsafe_allow_html=True)
 
@@ -307,21 +216,21 @@ if editor_resp and isinstance(editor_resp, dict) and editor_resp.get("text"):
 rule_text = st.session_state.yara_code
 
 # ── Validate button ──
-clicked = st.button("\u26a1 Validate", type="primary", key="val_btn", use_container_width=True)
+clicked = st.button("\u25b6 Validate", type="primary", key="val_btn", use_container_width=True)
 
 if clicked:
     if not rule_text.strip():
-        st.markdown('<div class="diag diag-err"><span class="diag-icon">\u274c</span><span class="diag-body diag-msg">No YARA rule provided</span></div>', unsafe_allow_html=True)
+        st.markdown('<div class="diag diag-err"><span class="diag-icon">!</span><span class="diag-body diag-msg">No YARA rule provided</span></div>', unsafe_allow_html=True)
     else:
         is_valid, errors, rule_name = validate(rule_text)
         lines = rule_text.splitlines()
 
         if not is_valid or errors:
-            st.markdown('<div class="section-title">\u274c Syntax Errors</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title">PROBLEMS</div>', unsafe_allow_html=True)
             for err in errors:
                 raw_line, msg = err['line'], err['message']
                 cls = 'warn' if err['type'] == 'warning' else 'err'
-                icon = '\u26a0\ufe0f' if err['type'] == 'warning' else '\u274c'
+                icon = '\u26a0' if err['type'] == 'warning' else '!'
                 loc = "EOF" if raw_line == 0 else f"L{raw_line}"
                 st.markdown(
                     f'<div class="diag diag-{cls}">'
@@ -335,19 +244,19 @@ if clicked:
                     s, e = max(0, raw_line - 2), min(len(lines), raw_line + 1)
                     ctx = []
                     for i in range(s, e):
-                        arrow = '<span class="arrow">\u25b6</span>' if i + 1 == raw_line else '<span class="arrow" style="color:rgba(148,163,184,0.2)">\u2022</span>'
+                        arrow = '<span class="arrow">></span>' if i + 1 == raw_line else '<span class="arrow" style="color:#858585">.</span>'
                         ctx.append(f'<span class="num">{i+1}</span>{arrow} {lines[i]}')
                     st.markdown(f'<div class="code-ctx">{"<br>".join(ctx)}</div>', unsafe_allow_html=True)
                 elif raw_line == 0 and lines:
                     s = max(0, len(lines) - 3)
-                    ctx = [f'<span class="num">{i+1}</span><span style="color:rgba(148,163,184,0.15)">\u2022</span> {lines[i]}' for i in range(s, len(lines))]
+                    ctx = [f'<span class="num">{i+1}</span><span style="color:#858585">.</span> {lines[i]}' for i in range(s, len(lines))]
                     st.markdown(f'<div class="code-ctx">{"<br>".join(ctx)}</div>', unsafe_allow_html=True)
         else:
             st.markdown(
                 f'<div class="success-banner">'
                 f'<div class="success-icon">\u2713</div>'
-                f'<div><b style="color:#10b981;">Valid YARA Rule</b><br>'
-                f'<span style="color:rgba(148,163,184,0.6);font-size:0.8rem;">{rule_name or "unknown"}</span></div>'
+                f'<div><b style="color:#4ec9b0;">No problems detected</b><br>'
+                f'<span style="color:#858585;font-size:0.78rem;">{rule_name or "unknown"}</span></div>'
                 f'</div>',
                 unsafe_allow_html=True
             )

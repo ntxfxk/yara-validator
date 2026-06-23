@@ -5,77 +5,67 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { height: 100%; min-height: 460px; background: transparent; }
+html, body { height: 100%; min-height: 420px; background: transparent; }
 #editor {
-    width: 100%; height: 100%; min-height: 460px;
-    font-size: 13.5px; line-height: 1.65;
+    width: 100%; height: 100%; min-height: 420px;
+    font-size: 13px; line-height: 1.6;
 }
-#error { display: none; padding: 20px; color: #f87171; font-family: monospace; }
+#error { display: none; padding: 20px; color: #f48771; font-family: monospace; }
 
-/* ─── Ace monokai overrides for cyberpunk theme ─── */
+/* ─── VSCode Dark+ theme for Ace ─── */
 .ace-monokai {
-    background: transparent !important;
-    color: #e2e8f0 !important;
+    background: #1e1e1e !important;
+    color: #d4d4d4 !important;
 }
-.ace-monokai .ace_scroller { background: transparent !important; }
+.ace-monokai .ace_scroller { background: #1e1e1e !important; }
 .ace-monokai .ace_gutter {
-    background: rgba(0, 0, 0, 0.25) !important;
-    color: rgba(148, 163, 184, 0.3) !important;
-    border-right: 1px solid rgba(255,255,255,0.04) !important;
+    background: #1e1e1e !important;
+    color: #858585 !important;
+    border-right: 1px solid #2d2d2d !important;
 }
 .ace-monokai .ace_gutter-active-line {
-    background: rgba(14, 165, 233, 0.06) !important;
+    background: #2a2d2e !important;
 }
 .ace-monokai .ace_marker-layer .ace_active-line {
-    background: rgba(255, 255, 255, 0.035) !important;
+    background: #2a2d2e !important;
 }
 .ace-monokai .ace_cursor {
-    color: rgba(14, 165, 233, 0.9) !important;
-    border-left: 2px solid rgba(14, 165, 233, 0.8) !important;
+    color: #aeafad !important;
+    border-left: 2px solid #aeafad !important;
 }
 .ace-monokai .ace_selection {
-    background: rgba(14, 165, 233, 0.18) !important;
+    background: rgba(86, 156, 214, 0.25) !important;
 }
 .ace-monokai .ace_marker-layer .ace_selection {
-    background: rgba(14, 165, 233, 0.22) !important;
+    background: rgba(86, 156, 214, 0.3) !important;
 }
-.ace-monokai .ace_search {
-    background: rgba(12, 12, 22, 0.96) !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
-    border-radius: 8px !important;
-    backdrop-filter: blur(12px) !important;
+.ace-monokai .ace_indent-guide {
+    border-right: 1px solid rgba(255,255,255,0.04) !important;
 }
-.ace-monokai .ace_search_field {
-    background: rgba(255,255,255,0.04) !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
-    color: #e2e8f0 !important;
-    border-radius: 6px !important;
-}
-.ace-monokai .ace_print-margin { display: none !important; }
 
-/* ─── Token color overrides for better contrast ─── */
-.ace-monokai .ace_keyword { color: #f472b6 !important; }
-.ace-monokai .ace_keyword.ace_control { color: #f472b6 !important; }
-.ace-monokai .ace_storage { color: #38bdf8 !important; }
-.ace-monokai .ace_string { color: #fbbf24 !important; }
-.ace-monokai .ace_comment { color: rgba(148, 163, 184, 0.45) !important; font-style: italic !important; }
-.ace-monokai .ace_constant.ace_numeric { color: #a78bfa !important; }
-.ace-monokai .ace_constant.ace_language { color: #a78bfa !important; }
-.ace-monokai .ace_variable { color: #67e8f9 !important; }
-.ace-monokai .ace_support.ace_type { color: #38bdf8 !important; }
-.ace-monokai .ace_keyword.ace_operator { color: #f472b6 !important; }
-.ace-monokai .ace_punctuation { color: rgba(226, 232, 240, 0.4) !important; }
+/* ─── VSCode Dark+ token colors ─── */
+.ace-monokai .ace_keyword { color: #569cd6 !important; }
+.ace-monokai .ace_keyword.ace_control { color: #569cd6 !important; }
+.ace-monokai .ace_storage { color: #569cd6 !important; }
+.ace-monokai .ace_string { color: #ce9178 !important; }
+.ace-monokai .ace_comment { color: #6a9955 !important; font-style: italic !important; }
+.ace-monokai .ace_constant.ace_numeric { color: #b5cea8 !important; }
+.ace-monokai .ace_constant.ace_language { color: #569cd6 !important; }
+.ace-monokai .ace_variable { color: #9cdcfe !important; }
+.ace-monokai .ace_support.ace_type { color: #4ec9b0 !important; }
+.ace-monokai .ace_keyword.ace_operator { color: #d4d4d4 !important; }
+.ace-monokai .ace_punctuation { color: #d4d4d4 !important; }
+.ace-monokai .ace_keyword.ace_other { color: #c586c0 !important; }
 
-/* ─── Custom scrollbar ─── */
-.ace_scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+/* ─── Scrollbar ─── */
+.ace_scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
 .ace_scrollbar::-webkit-scrollbar-track { background: transparent; }
 .ace_scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(148, 163, 184, 0.12);
-    border-radius: 3px;
+    background: #424242;
 }
-.ace_scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.25); }
+.ace_scrollbar::-webkit-scrollbar-thumb:hover { background: #4f4f4f; }
 
-.ace_editor { border-radius: 8px; }
+.ace_editor { border-radius: 0; }
 </style>
 </head>
 <body>
@@ -225,9 +215,9 @@ html, body { height: 100%; min-height: 460px; background: transparent; }
     editor.setShowPrintMargin(false);
     editor.setOption('wrap', true);
     editor.setOption('indentedSoftWrap', false);
-    editor.setOption('fontSize', 13.5);
+    editor.setOption('fontSize', 13);
     editor.setReadOnly(false);
-    editor.renderer.setScrollMargin(10, 10, 10, 10);
+    editor.renderer.setScrollMargin(8, 8, 8, 8);
     editor.setAutoScrollEditorIntoView(true);
     editor.session.setUseWrapMode(true);
   } catch(e) {
