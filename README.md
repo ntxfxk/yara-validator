@@ -2,9 +2,13 @@
 
 A web-based YARA rule syntax validator with Ace editor and syntax highlighting.
 
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.12-3776AB)
+![YARA](https://img.shields.io/badge/YARA-4.5+-A9225C)
+
 ## Features
 
-- Syntax validation via `yarac64.exe` (YARA 4.5.5)
+- Syntax validation via `yara-python` (cross-platform) or `yarac64.exe` (Windows fallback)
 - Colored YARA syntax highlighting (Monokai theme)
 - Error display with context lines
 - Mobile-responsive dark glassmorphism UI
@@ -12,21 +16,17 @@ A web-based YARA rule syntax validator with Ace editor and syntax highlighting.
 ## Local Development
 
 ```bash
+pip install -r requirements.txt
 python -m streamlit run app.py
 ```
 
-Requires `yarac64.exe` at `yara-bin/yarac64.exe`.
+On Windows, place `yarac64.exe` at `yara-bin/yarac64.exe` for validation fallback.
 
-## Deployment
+## Deploy to Streamlit Community Cloud
 
-### Streamlit Community Cloud (Recommended)
-
-1. Push this repo to GitHub
-2. Go to https://share.streamlit.io
-3. Deploy from your GitHub repo
-
-### Render.com (Alternative)
-
-1. Create a new Web Service on Render
-2. Set build command: `pip install -r requirements.txt`
-3. Set start command: `streamlit run app.py --server.port $PORT`
+1. Go to https://share.streamlit.io
+2. Sign in with GitHub
+3. Click **New app**
+4. Select repo: `ntxfxk/yara-validator`
+5. Branch: `master`, Main file: `app.py`
+6. Click **Deploy**
