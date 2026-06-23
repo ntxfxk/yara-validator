@@ -5,67 +5,62 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { height: 100%; min-height: 420px; background: transparent; }
+html, body { height: 100%; min-height: 400px; background: transparent; }
 #editor {
-    width: 100%; height: 100%; min-height: 420px;
+    width: 100%; height: 100%; min-height: 400px;
     font-size: 13px; line-height: 1.6;
 }
-#error { display: none; padding: 20px; color: #f48771; font-family: monospace; }
+#error { display: none; padding: 20px; color: #f38ba8; font-family: monospace; }
 
-/* ─── VSCode Dark+ theme for Ace ─── */
+/* ─── Catppuccin Mocha theme for Ace ─── */
 .ace-monokai {
-    background: #1e1e1e !important;
-    color: #d4d4d4 !important;
+    background: transparent !important;
+    color: #cdd6f4 !important;
 }
-.ace-monokai .ace_scroller { background: #1e1e1e !important; }
+.ace-monokai .ace_scroller { background: transparent !important; }
 .ace-monokai .ace_gutter {
-    background: #1e1e1e !important;
-    color: #858585 !important;
-    border-right: 1px solid #2d2d2d !important;
+    background: rgba(0, 0, 0, 0.15) !important;
+    color: #45475a !important;
+    border-right: 1px solid rgba(255,255,255,0.03) !important;
 }
 .ace-monokai .ace_gutter-active-line {
-    background: #2a2d2e !important;
+    background: rgba(137, 180, 250, 0.04) !important;
 }
 .ace-monokai .ace_marker-layer .ace_active-line {
-    background: #2a2d2e !important;
+    background: rgba(255, 255, 255, 0.025) !important;
 }
 .ace-monokai .ace_cursor {
-    color: #aeafad !important;
-    border-left: 2px solid #aeafad !important;
+    color: #f5e0dc !important;
+    border-left: 2px solid #f5e0dc !important;
 }
 .ace-monokai .ace_selection {
-    background: rgba(86, 156, 214, 0.25) !important;
+    background: rgba(137, 180, 250, 0.15) !important;
 }
 .ace-monokai .ace_marker-layer .ace_selection {
-    background: rgba(86, 156, 214, 0.3) !important;
-}
-.ace-monokai .ace_indent-guide {
-    border-right: 1px solid rgba(255,255,255,0.04) !important;
+    background: rgba(137, 180, 250, 0.2) !important;
 }
 
-/* ─── VSCode Dark+ token colors ─── */
-.ace-monokai .ace_keyword { color: #569cd6 !important; }
-.ace-monokai .ace_keyword.ace_control { color: #569cd6 !important; }
-.ace-monokai .ace_storage { color: #569cd6 !important; }
-.ace-monokai .ace_string { color: #ce9178 !important; }
-.ace-monokai .ace_comment { color: #6a9955 !important; font-style: italic !important; }
-.ace-monokai .ace_constant.ace_numeric { color: #b5cea8 !important; }
-.ace-monokai .ace_constant.ace_language { color: #569cd6 !important; }
-.ace-monokai .ace_variable { color: #9cdcfe !important; }
-.ace-monokai .ace_support.ace_type { color: #4ec9b0 !important; }
-.ace-monokai .ace_keyword.ace_operator { color: #d4d4d4 !important; }
-.ace-monokai .ace_punctuation { color: #d4d4d4 !important; }
-.ace-monokai .ace_keyword.ace_other { color: #c586c0 !important; }
+/* ─── Catppuccin Mocha token colors ─── */
+.ace-monokai .ace_keyword { color: #cba6f7 !important; }
+.ace-monokai .ace_keyword.ace_control { color: #cba6f7 !important; }
+.ace-monokai .ace_storage { color: #89b4fa !important; }
+.ace-monokai .ace_string { color: #a6e3a1 !important; }
+.ace-monokai .ace_comment { color: #585b70 !important; font-style: italic !important; }
+.ace-monokai .ace_constant.ace_numeric { color: #fab387 !important; }
+.ace-monokai .ace_constant.ace_language { color: #89b4fa !important; }
+.ace-monokai .ace_variable { color: #74c7ec !important; }
+.ace-monokai .ace_support.ace_type { color: #89b4fa !important; }
+.ace-monokai .ace_keyword.ace_operator { color: #89b4fa !important; }
+.ace-monokai .ace_keyword.ace_other { color: #f5c2e7 !important; }
+.ace-monokai .ace_punctuation { color: rgba(205, 214, 244, 0.35) !important; }
 
 /* ─── Scrollbar ─── */
-.ace_scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+.ace_scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
 .ace_scrollbar::-webkit-scrollbar-track { background: transparent; }
-.ace_scrollbar::-webkit-scrollbar-thumb {
-    background: #424242;
-}
-.ace_scrollbar::-webkit-scrollbar-thumb:hover { background: #4f4f4f; }
+.ace_scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); }
+.ace_scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.09); }
 
-.ace_editor { border-radius: 0; }
+.ace_editor { border-radius: 8px; }
 </style>
 </head>
 <body>
